@@ -147,13 +147,16 @@ trait MainTrait
         ;
         //====================================================================//
         // EAN
-        $this->fieldsFactory()->create(SPL_T_INT)
+        // Used as Primary Key, the EAN is a string: an integer would drop
+        // its leading zeros and never match the other side.
+        $this->fieldsFactory()->create(self::isEan13Primary() ? SPL_T_VARCHAR : SPL_T_INT)
             ->identifier('ean13')
             ->name(SLM::translate('EAN-13 or JAN barcode', 'AdminCatalogFeature'))
             ->microData('http://schema.org/Product', 'gtin13')
             ->group($groupName)
             ->addOption('shop', MSM::MODE_ALL)
             ->isIndexed()
+            ->isPrimary(self::isEan13Primary())
         ;
         //====================================================================//
         // ISBN

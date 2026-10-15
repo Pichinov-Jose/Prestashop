@@ -18,6 +18,7 @@
 
 namespace Splash\Local\Objects\Product;
 
+use Configuration;
 use Db;
 use DbQuery;
 use Shop;
@@ -35,6 +36,20 @@ if (!defined('_PS_VERSION_')) {
  */
 trait PrimaryTrait
 {
+    /**
+     * Products are identified by their EAN-13 instead of their reference
+     *
+     * Splash requires ALL primary keys to match: adding the EAN-13 next to
+     * the reference would narrow the identification instead of widening it.
+     * The primary key is therefore a choice, the reference by default.
+     *
+     * @return bool
+     */
+    public static function isEan13Primary(): bool
+    {
+        return 'ean13' === Configuration::get('SPLASH_PRODUCT_PRIMARY');
+    }
+
     /**
      * @inheritDoc
      */
@@ -72,8 +87,18 @@ trait PrimaryTrait
         $sql->leftJoin('product_attribute', 'pa', '(pa.id_product = p.id_product) ');
         //====================================================================//
         // Setup filters
-        // Add filters with names conversions. Added LOWER function to be NON case sensitive
-        if (!empty($keys['ref']) && is_string($keys['ref'])) {
+        if (self::isEan13Primary()) {
+            //====================================================================//
+            // Search EAN-13 on Combinations, or on Products without Combinations
+            $ean13 = trim((string) ($keys['ean13'] ?? ''));
+            if ('' === $ean13) {
+                return null;
+            }
+            $where = ' pa.ean13 = \'' . pSQL($ean13) . '\' ';
+            $where .= ' OR ( p.ean13 = \'' . pSQL($ean13) . '\' AND pa.id_product_attribute IS NULL ) ';
+            $sql->where($where);
+        } elseif (!empty($keys['ref']) && is_string($keys['ref'])) {
+            // Add filters with names conversions. Added LOWER function to be NON case sensitive
             //====================================================================//
             // Search in Customer Email
             $where = ' LOWER( p.reference ) = LOWER( \'' . pSQL($keys['ref']) . '\') ';

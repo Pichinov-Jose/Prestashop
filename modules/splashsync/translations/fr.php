@@ -58,3 +58,7 @@ $_MODULE['<{splashsync}prestashop>splashsync_2e81ae28f726df638cc81ae087a4cdfb'] 
 $_MODULE['<{splashsync}prestashop>splashsync_aed132b58da8a379adf0bf3b391d39b6'] = 'Test de Ping du Serveur Splash.';
 $_MODULE['<{splashsync}prestashop>splashsync_7b059e4b9f97a206e9c04925c113eceb'] = 'Test de Connexion';
 $_MODULE['<{splashsync}prestashop>splashsync_7d3d587167da4a82d8de90c122e53f31'] = 'Test de connexion au Serveur Splash.';
+$_MODULE['<{splashsync}prestashop>splashsync_1aa9c47c31c127dbb007ba84ab4c26dd'] = 'Produits identifiés par';
+$_MODULE['<{splashsync}prestashop>splashsync_cb58a3d9fcdaf5e843377168c3e62255'] = 'Champ utilisé pour retrouver un produit existant avant d\'en créer un nouveau. Toutes les clés primaires doivent concorder, une seule est donc utilisée. Avec l\'EAN-13, un code porté par plusieurs produits n\'en identifie aucun, et un produit sans EAN-13 n\'est jamais identifié.';
+$_MODULE['<{splashsync}prestashop>splashsync_63d5049791d9d79d86e9a108b0a999ca'] = 'Référence';
+$_MODULE['<{splashsync}prestashop>splashsync_0db20bb6bbf6c951a29d3113cce393c2'] = 'Code-barres EAN-13';

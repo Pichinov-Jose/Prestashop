@@ -306,6 +306,7 @@ class SplashSync extends Module
         $helper->fields_value['SPLASH_SMART_NOTIFY'] = Configuration::get('SPLASH_SMART_NOTIFY');
         $helper->fields_value['SPLASH_SYNC_VIRTUAL'] = Configuration::get('SPLASH_SYNC_VIRTUAL');
         $helper->fields_value['SPLASH_SYNC_PACKS'] = Configuration::get('SPLASH_SYNC_PACKS');
+        $helper->fields_value['SPLASH_PRODUCT_PRIMARY'] = Configuration::get('SPLASH_PRODUCT_PRIMARY') ?: 'ref';
         $helper->fields_value['SPLASH_CONFIGURATOR'] = Configuration::get('SPLASH_CONFIGURATOR');
         $helper->fields_value['SPLASH_PAYMENT_TRANSLATIONS'] = Configuration::get('SPLASH_PAYMENT_TRANSLATIONS');
 
@@ -689,6 +690,23 @@ class SplashSync extends Module
         );
 
         //====================================================================//
+        // Products Primary Key
+        $fields[] = array(
+            'type' => 'select',
+            'name' => 'SPLASH_PRODUCT_PRIMARY',
+            'label' => $this->l('Products identified by'),
+            'hint' => $this->l('Field used to find an existing product before creating a new one. All primary keys must match, so only one is used. With the EAN-13, a code shared by several products identifies none of them, and products without EAN-13 are never identified.'),
+            'options' => array(
+                'query' => array(
+                    array('id' => 'ref', 'name' => $this->l('Reference')),
+                    array('id' => 'ean13', 'name' => $this->l('EAN-13 barcode')),
+                ),
+                'id' => 'id',
+                'name' => 'name'
+            )
+        );
+
+        //====================================================================//
         // Init Form array
         $output = array();
         $output['form'] = array(
@@ -904,6 +922,10 @@ class SplashSync extends Module
         Configuration::updateValue('SPLASH_SMART_NOTIFY', Tools::getValue('SPLASH_SMART_NOTIFY'));
         Configuration::updateValue('SPLASH_SYNC_VIRTUAL', Tools::getValue('SPLASH_SYNC_VIRTUAL'));
         Configuration::updateValue('SPLASH_SYNC_PACKS', Tools::getValue('SPLASH_SYNC_PACKS'));
+        Configuration::updateValue(
+            'SPLASH_PRODUCT_PRIMARY',
+            ('ean13' == Tools::getValue('SPLASH_PRODUCT_PRIMARY')) ? 'ean13' : 'ref'
+        );
         Configuration::updateValue('SPLASH_CONFIGURATOR', Tools::getValue('SPLASH_CONFIGURATOR'));
         Configuration::updateValue('SPLASH_PAYMENT_TRANSLATIONS', Tools::getValue('SPLASH_PAYMENT_TRANSLATIONS'));
 
